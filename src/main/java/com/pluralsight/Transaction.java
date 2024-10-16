@@ -11,7 +11,7 @@ public class Transaction{
     private double amount;
     private double runningBalance;
 
-    public Transaction( String date, String time, String description,String vendorName, double amount, double runningBalance) {
+    public Transaction(String date, String time, String description,String vendorName, double amount, double runningBalance) {
         this.date = date;
         this.time = time;
         this.description = description;
