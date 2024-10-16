@@ -1,7 +1,5 @@
-date|time|description|vendor|amount
-2023-04-15|10:13:25|ergonomic keyboard|Amazon|-89.50
-2023-04-15|11:15:00|Invoice 1001|Joe|1500.00
-2024-09-01|17:43:39|Invoice 1002|Joe|1800.00
-2024-10-05|17:45:38|Pepsi 8oz. 500/pack|PepsiCo|-200.00
-2024-10-11|18:40:55|Meta Quest 2 VR Headset|Amazon|-200.00
-2024-10-13|19:25:16|Playstation 5 Black Remote|Amazon|-60.00
+date|time|description|vendor|amount|balance
+2023-04-15|10:13:25|ergonomic keyboard|Amazon|-89.50|1000.00
+2024-10-16|10:26:34|invoice 2603|Joe|1300.00|2300.00
+2024-10-16|10:27:24|Playstation 5|Amazon|-400.00|1900.00
+2024-10-16|10:53:49|cash app deposit|Bill|580.00|2480.00
