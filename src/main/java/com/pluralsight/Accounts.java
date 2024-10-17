@@ -55,14 +55,17 @@ public class Accounts {
     public ArrayList<Transaction> getTransactions() {
         return transactions;
     }
-
-    @Override
-    public String toString() {
-        return "Accounts{" +
-                "\naccountID=" + accountID +
-                ", \nuser=" + user.toString() +
-                ", \ntransactions=" + transactions +
-                '}';
+    /**
+     *      printToConsole is a utility used for formatting my console output
+     *      all display functions call this one
+     * */
+    public static void printToConsole(Transaction t){
+        System.out.printf("| %15s | %15s | %-30s | %15s | %15.2f | %15.2f |\n", t.getDate(),
+                t.getTime(),
+                t.getDescription(),
+                t.getVendorName(),
+                t.getAmount(),
+                t.getRunningBalance());
     }
 
     /*public void accountScreen(){
@@ -292,12 +295,7 @@ public class Accounts {
             System.out.printf("| %15s | %15s | %-30s | %15s | %15s | %15s |\n", "Date", "Time", "Description", "Vendor", "Amount", "Balance");
             System.out.println("----------------------------------------------------------------------------------------------------------------------------");
             for (Transaction t : transactions) {
-                System.out.printf("| %15s | %15s | %-30s | %15s | %15.2f | %15.2f |\n", t.getDate(),
-                        t.getTime(),
-                        t.getDescription(),
-                        t.getVendorName(),
-                        t.getAmount(),
-                        t.getRunningBalance());
+                printToConsole(t);
             }
             boolean returnToMenu = Console.PromptForYesNo("Would you like to return to previous menu?");
             if (returnToMenu)
@@ -309,15 +307,11 @@ public class Accounts {
     public static void displayDeposits(){
         while(true){
             System.out.println("All Deposits");
-            System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", "Date", "Time", "Description", "Vendor", "Amount");
-            System.out.println("----------------------------------------------------------------------------------------------------------");
+            System.out.printf("| %15s | %15s | %-30s | %15s | %15s | %15s |\n", "Date", "Time", "Description", "Vendor", "Amount", "Balance");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
             for (Transaction t : transactions) {
                 if (t.getAmount() > 0) //   if the amount is not negative (reflecting deposits) then format it and display the following
-                    System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", t.getDate(),
-                            t.getTime(),
-                            t.getDescription(),
-                            t.getVendorName(),
-                            t.getAmount());
+                    printToConsole(t);
             }
             boolean returnToMenu = Console.PromptForYesNo("Would you like to return to previous menu?");
             if (returnToMenu)
@@ -327,15 +321,11 @@ public class Accounts {
     public static void displayPayments(){
         while(true){
             System.out.println("All Payments");
-            System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", "Date", "Time", "Description", "Vendor", "Amount");
-            System.out.println("----------------------------------------------------------------------------------------------------------");
+            System.out.printf("| %15s | %15s | %-30s | %15s | %15s | %15s |\n", "Date", "Time", "Description", "Vendor", "Amount", "Balance");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
             for (Transaction t : transactions) {
                 if (t.getAmount() < 0)//    if amount is negative (money spent, reflecting a payment) then format and display the following.
-                    System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", t.getDate(),
-                            t.getTime(),
-                            t.getDescription(),
-                            t.getVendorName(),
-                            t.getAmount());
+                    printToConsole(t);
             }
             boolean returnToMenu = Console.PromptForYesNo("Would you like to return to previous menu?");
             if (returnToMenu)
@@ -393,43 +383,49 @@ public class Accounts {
      *      monthToDate() returns all entries of the current month up to the current date
      * */
     public static void monthToDate(){
-        System.out.println("Month To Date");
-        System.out.println("----------------------------------------------------------------------------------------------------------");
-        LocalDateTime monthNow = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
-        String compareMonth = monthNow.format(formatter);//format the current month
+        do{
+            System.out.println("Month To Date\n");
+            System.out.printf("| %15s | %15s | %-30s | %15s | %15s | %15s |\n", "Date", "Time", "Description", "Vendor", "Amount", "Balance");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+            LocalDateTime monthNow = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
+            int yearNow = LocalDateTime.now().getYear();
+            String compareMonth = monthNow.format(formatter);//format the current month
 
-        for(Transaction t: transactions){
-            if(t.getDate().contains(compareMonth)) //if a transaction date contains that formatted month, then display the following
-                System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", t.getDate(),
-                        t.getTime(),
-                        t.getDescription(),
-                        t.getVendorName(),
-                        t.getAmount());
-        }
+            for (Transaction t : transactions) {
+                if (t.getDate().contains(yearNow + "-" + compareMonth)) //if a transaction date contains that formatted month, then display the following
+                    printToConsole(t);
+            }
+
+            boolean isTryAgain = Console.PromptForYesNo("Would you like to return to the previous menu? ");
+            if(isTryAgain)
+                return;
+        }while (true);
     }
     /**
      *      previousMonth() returns all entries from the previous month, this is done by
      *      using the current month and subtracting 1
      * */
     public static void previousMonth(){
-        System.out.println("Previous Month");
-        System.out.println("----------------------------------------------------------------------------------------------------------");
-        LocalDateTime monthNow = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
-        String formatMonth = monthNow.format(formatter);
-        int monthNumber = LocalDateTime.now().getMonthValue()-1; //     same idea as monthToDate except subtract one from the current month
-        formatMonth = String.format("%d",monthNumber);
+        do{
+            System.out.println("Previous Month\n");
+            System.out.printf("| %15s | %15s | %-30s | %15s | %15s | %15s |\n", "Date", "Time", "Description", "Vendor", "Amount", "Balance");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+            int prevMonth = LocalDateTime.now().getMonthValue() - 1;
+            LocalDateTime newMonth = LocalDateTime.now().withMonth(prevMonth);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+            String previousMonth = newMonth.format(formatter);
 
-        for(Transaction t: transactions){
-            if(t.getDate().contains(formatMonth)){//    if transaction date contains the previous month (current month - 1), display the following
-                System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", t.getDate(),
-                        t.getTime(),
-                        t.getDescription(),
-                        t.getVendorName(),
-                        t.getAmount());
+
+            for (Transaction t : transactions) {
+                if (t.getDate().contains(previousMonth)) {//    if transaction date contains the previous month (current month - 1), display the following
+                    printToConsole(t);
+                }
             }
-        }
+            boolean isTryAgain = Console.PromptForYesNo("Would you like to return to the previous menu? ");
+            if(isTryAgain)
+                return;
+        }while (true);
     }
     /**
      *      filterByMonth() is the first option of the third level menu,
@@ -437,81 +433,93 @@ public class Accounts {
     *       then displayed if matched
     * */
     public static void filterByMonth(){
-        String query = Console.PromptForString("Enter a month you'd like to view transactions for: ");
-        for(Transaction t: transactions){
-            String[] dateToConvert = t.getDate().split("-");//      split transaction date into 3 parts: year, month, day then add to array
-            String monthToQuery = dateToConvert[1];//   grab the month which is the 2nd position, index 1 of the array
-            if(query.equalsIgnoreCase(monthToQuery)){ //    compare the query, if it matches, display the following
-                System.out.println("Transactions for " + query);
-                System.out.println("----------------------------------------------------------------------------------------------------------");
+        do{
+            String query = Console.PromptForString("Enter a month you'd like to view transactions for: ");
+            System.out.println("\nTransactions for " + query + "\n");
+            System.out.printf("| %15s | %15s | %-30s | %15s | %15s | %15s |\n", "Date", "Time", "Description", "Vendor", "Amount", "Balance");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+            for (Transaction t : transactions) {
+                String[] dateToConvert = t.getDate().split("-");//      split transaction date into 3 parts: year, month, day then add to array
+                String monthToQuery = dateToConvert[1];//   grab the month which is the 2nd position, index 1 of the array
+                if (query.equalsIgnoreCase(monthToQuery)) { //    compare the query, if it matches, display the following
+                    printToConsole(t);
+                }
 
-                System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", t.getDate(),
-                        t.getTime(),
-                        t.getDescription(),
-                        t.getVendorName(),
-                        t.getAmount());
             }
-
-        }
+            boolean isTryAgain = Console.PromptForYesNo("Would you like to return to the previous menu? ");
+            if(isTryAgain)
+                return;
+        }while (true);
     }
     /**
      *      yearToDate() is the equivalent of monthToDate() but returning all entries of the current year
      * */
     public static void yearToDate(){
-        System.out.println("Year To Date");
-        System.out.println("----------------------------------------------------------------------------------------------------------");
-        LocalDateTime yearNow = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY");
-        String compareYear = yearNow.format(formatter);
+        do{
+            System.out.println("Year To Date\n");
+            System.out.printf("| %15s | %15s | %-30s | %15s | %15s | %15s |\n", "Date", "Time", "Description", "Vendor", "Amount", "Balance");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+            LocalDateTime yearNow = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY");
+            String compareYear = yearNow.format(formatter);
 
-        for(Transaction t: transactions){
-            if(t.getDate().contains(compareYear))
-                System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", t.getDate(),
-                        t.getTime(),
-                        t.getDescription(),
-                        t.getVendorName(),
-                        t.getAmount());
-        }
+            for (Transaction t : transactions) {
+                if (t.getDate().contains(compareYear))
+                    printToConsole(t);
+            }
+            boolean isTryAgain = Console.PromptForYesNo("Would you like to return to the previous menu? ");
+            if(isTryAgain)
+                return;
+        }while (true);
     }
     /**
      *      previousYear() is also the equivalent of previousMonth(), but for filtering out and displaying the previous year
     * */
     public static void previousYear(){
-        System.out.println("Previous Year");
-        System.out.println("----------------------------------------------------------------------------------------------------------");
-        LocalDateTime yearNow = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY");
-        String compareYear = yearNow.format(formatter);
-        int yearFormat = LocalDateTime.now().getYear() - 1;
-        compareYear = String.format("%d",yearFormat);
+        do{
+            System.out.println("Previous Year\n");
+            System.out.printf("| %15s | %15s | %-30s | %15s | %15s | %15s |\n", "Date", "Time", "Description", "Vendor", "Amount", "Balance");
+            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+            LocalDateTime yearNow = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY");
+            String compareYear = yearNow.format(formatter);
+            int yearFormat = LocalDateTime.now().getYear() - 1;
+            compareYear = String.format("%d", yearFormat);
 
-        for(Transaction t: transactions){
-            if(t.getDate().contains(compareYear))
-                System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", t.getDate(),
-                        t.getTime(),
-                        t.getDescription(),
-                        t.getVendorName(),
-                        t.getAmount());
-        }
+            for (Transaction t : transactions) {
+                if (t.getDate().contains(compareYear))
+                    printToConsole(t);
+            }
+            boolean isTryAgain = Console.PromptForYesNo("Would you like to return to the previous menu? ");
+            if(isTryAgain)
+                return;
+        }while (true);
     }
     /**
      *      searchByVendor() is a modified version of filterByMonth, difference being instead of filtering by month,
      *      the vendor is used as a conditional query
      * */
     public static void searchByVendor(){
-        String query = Console.PromptForString("Enter the name of the vendor you wish you view history with:");
-        System.out.println("Transactions History: " + query.toUpperCase());
-        for(Transaction t: transactions){
-            if(query.equalsIgnoreCase(t.getVendorName())){
-                System.out.println("----------------------------------------------------------------------------------------------------------");
+        do{
+            try {
+                String query = Console.PromptForString("Enter the name of the vendor you wish you view history with:");
+                System.out.println("Transactions History: " + query.toUpperCase() + "\n");
+                System.out.printf("| %15s | %15s | %-30s | %15s | %15s | %15s |\n", "Date", "Time", "Description", "Vendor", "Amount", "Balance");
+                System.out.println("----------------------------------------------------------------------------------------------------------------------------");
 
-                System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", t.getDate(),
-                        t.getTime(),
-                        t.getDescription(),
-                        t.getVendorName(),
-                        t.getAmount());
+                for (Transaction t : transactions) {
+                    if (query.equalsIgnoreCase(t.getVendorName())) {
+
+                        printToConsole(t);
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage() + ":" + " Vendor must begin with a letter");
             }
-        }
+            boolean isTryAgain = Console.PromptForYesNo( "\nWould you like to search again? ");
+            if(!isTryAgain)
+                return;
+        }while(true);
     }
     /**
      *      A hardcoded Smiley face is used to transition to and from different level menus,
