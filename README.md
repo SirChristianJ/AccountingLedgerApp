@@ -22,7 +22,7 @@
    
 
 ## 1. Opening menu should prompt a user with a menu consisting of 4 options:
-!(/StaticAssets/capstonewalkthrough1.jpg)
+![rndtxt](/StaticAssets/capstonewalkthrough1.jpg)
 
 
 
