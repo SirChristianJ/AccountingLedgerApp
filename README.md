@@ -22,7 +22,7 @@
    
 
 ## 1. Opening menu should prompt a user with a menu consisting of 4 options:
-![rndtxt](https://github.com/SirChristianJ/AccountingLedgerApp/tree/main/StaticAssets/capstonewalkthrough1.jpg)
+![rndtxt](https://github.com/SirChristianJ/AccountingLedgerApp/blob/main/StaticAssets/capstonewalkthough1.jpg)
 
 
 
