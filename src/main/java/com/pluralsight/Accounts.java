@@ -137,7 +137,17 @@ public class Accounts {
 
         return transactions;
     }
-    public static void addDeposit() {
+
+    /**
+     *      First level menu functions
+     * */
+
+    /**
+     *      addDeposit() method prompts users to enter required fields necessary for a deposit
+     *      to be successfully created. That information is then used to create a new instance of a transaction
+     *      that new transaction is then add to the existing transaction ArrayList and written to a CSV file
+     * */
+    public void addDeposit() {
         boolean isAnotherDeposit = false;
         do{
             try {
@@ -146,22 +156,23 @@ public class Accounts {
                 LocalDateTime dateTime = LocalDateTime.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss");
                 String timeStampFormatter = dateTime.format(formatter);
-                String[] timeStamp  =  timeStampFormatter.split(" ");
+                String[] timeStamp  =  timeStampFormatter.split(" ");   //splits date and time into 2 separate fields
 
+                //      handles what to do if a user would like to make another deposit afterward
                 if (isAddDeposit) {
-                    //String transactionUser = Console.PromptForString("Enter the name of the user initiating the transaction: ");
                     String transactionDescription = Console.PromptForString("Enter a description for this transaction: ");
                     String transactionVendor = Console.PromptForString("Enter the name of the vendor making this deposit: ");
                     double transactionPrice = Console.PromptForDouble("Enter a price: ");
                     double transactionBalance = 0;
                     for (Transaction t : transactions)
                         transactionBalance = t.getRunningBalance();
+                    //      when new transaction is made, the runningBalance must be added to the current
+                    //      transaction price to reflect the change in balance after
                     Transaction transaction = new Transaction(timeStamp[0],timeStamp[1], transactionDescription,transactionVendor,  transactionPrice,transactionBalance+transactionPrice );
-                    //System.out.println(transaction.getDateTime() + " " + transaction.getDescription() + " " + transaction.getVendor() + " " + transactionPrice * -1.0);
                     transactions.add(transaction);
-                    writeTransactionToCSV();
+                    writeTransactionToCSV();//      Acts as a save data/write data as the transaction ArrayList depends on the CSV data
                 }
-                isAnotherDeposit = Console.PromptForYesNo("\nWould you like to make another deposit? ");
+                isAnotherDeposit = Console.PromptForYesNo("\nWould you like to make another deposit " + getUser().getFullName() + "?");
                 if(!isAnotherDeposit) return;
 
             } catch (InputMismatchException e) {
@@ -170,38 +181,47 @@ public class Accounts {
             }
         }while (true);
     }
-    public static void makePayment(){
-        boolean isAnotherDeposit = false;
+    /**
+     *      makePayment() method is essentially the same as the addDeposit method, only difference is payments
+     *      are subtracted from the running balance, so they must be written to the CSV differently to reflect that fact
+     * */
+    public void makePayment(){
+        boolean isAnotherPayment = false;
         do{
             try {
                 printStarsToTransitionMenu();
-                boolean isAddDeposit = Console.PromptForYesNo("Would you like to make a payment? ");
+                boolean isAddPayment = Console.PromptForYesNo("Would you like to make a payment? ");
                 LocalDateTime dateTime = LocalDateTime.now();
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss");
                 String timeStampFormatter = dateTime.format(formatter);
                 String[] timeStamp  =  timeStampFormatter.split(" ");
 
-                if (isAddDeposit) {
+                if (isAddPayment) {
                     String transactionDescription = Console.PromptForString("Enter a description for this transaction: ");
                     String transactionVendor = Console.PromptForString("Enter the name of the vendor receiving this payment: ");
                     double transactionPrice = Console.PromptForDouble("Enter a price: ");
                     double transactionBalance = 0;
                     for(Transaction t: transactions)
                         transactionBalance = t.getRunningBalance();
+                    //      transaction price is multiplied by -1 to convert it to a negative number to reflect money spent,
+                    //      the running balance then reflects the difference after the transaction price is subtracted
                     Transaction transaction = new Transaction(timeStamp[0],timeStamp[1],transactionDescription,transactionVendor, transactionPrice*-1.0,transactionBalance-transactionPrice);
-                    //System.out.println(transaction.getDateTime() + " " + transaction.getDescription() + " " + transaction.getVendor() + " " + transactionPrice * -1.0);
                     transactions.add(transaction);
                     writeTransactionToCSV();
                 }
-                isAnotherDeposit = Console.PromptForYesNo("\nWould you like to make another payment? ");
+                isAnotherPayment = Console.PromptForYesNo("\nWould you like to make another payment " + getUser().getFullName() + "?");
 
 
             } catch (InputMismatchException e) {
                 System.out.println(e.getMessage() + "<---- Make sure your input is numeric.");
 
             }
-        }while (isAnotherDeposit);
+        }while (isAnotherPayment);
     }
+    /**
+     *      writeTransactionToCSV() acts as a save file and write data file,
+     *      each transaction is formatted and written/saved with each call to the method
+     * */
     public static void writeTransactionToCSV() {
         try {
 
@@ -220,10 +240,10 @@ public class Accounts {
     }
 
     /**
-     *Second level menu
-     * handles all functionality related to filtering the ledger
+     *      Second level menu
+     *      handles all functionality related to filtering the ledger
      */
-    public static void ledger(){
+    public void ledger(){
         ledgerScreen();
     }
     public static void ledgerScreen(){
@@ -262,6 +282,10 @@ public class Accounts {
             }
         }while(true);
     }
+    /**
+     *      displays a filtered result based on user query
+     *      extends second level menu
+     * */
     public static void displayAllEntries(){
         while(true){
             System.out.println("All entries");
@@ -288,7 +312,7 @@ public class Accounts {
             System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", "Date", "Time", "Description", "Vendor", "Amount");
             System.out.println("----------------------------------------------------------------------------------------------------------");
             for (Transaction t : transactions) {
-                if (t.getAmount() > 0)
+                if (t.getAmount() > 0) //   if the amount is not negative (reflecting deposits) then format it and display the following
                     System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", t.getDate(),
                             t.getTime(),
                             t.getDescription(),
@@ -306,7 +330,7 @@ public class Accounts {
             System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", "Date", "Time", "Description", "Vendor", "Amount");
             System.out.println("----------------------------------------------------------------------------------------------------------");
             for (Transaction t : transactions) {
-                if (t.getAmount() < 0)
+                if (t.getAmount() < 0)//    if amount is negative (money spent, reflecting a payment) then format and display the following.
                     System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", t.getDate(),
                             t.getTime(),
                             t.getDescription(),
@@ -320,8 +344,8 @@ public class Accounts {
     }
 
     /**
-     * Third level Menu
-     * handles all functionality related to filtering reports
+     *      Third level Menu
+     *      handles all functionality related to filtering reports
      * */
     public static void reportScreen(){
         do{
@@ -365,15 +389,18 @@ public class Accounts {
             }
         }while(true);
     }
+    /**
+     *      monthToDate() returns all entries of the current month up to the current date
+     * */
     public static void monthToDate(){
         System.out.println("Month To Date");
         System.out.println("----------------------------------------------------------------------------------------------------------");
         LocalDateTime monthNow = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
-        String compareMonth = monthNow.format(formatter);
+        String compareMonth = monthNow.format(formatter);//format the current month
 
         for(Transaction t: transactions){
-            if(t.getDate().contains(compareMonth))
+            if(t.getDate().contains(compareMonth)) //if a transaction date contains that formatted month, then display the following
                 System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", t.getDate(),
                         t.getTime(),
                         t.getDescription(),
@@ -381,17 +408,21 @@ public class Accounts {
                         t.getAmount());
         }
     }
+    /**
+     *      previousMonth() returns all entries from the previous month, this is done by
+     *      using the current month and subtracting 1
+     * */
     public static void previousMonth(){
         System.out.println("Previous Month");
         System.out.println("----------------------------------------------------------------------------------------------------------");
         LocalDateTime monthNow = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM");
         String formatMonth = monthNow.format(formatter);
-        int monthNumber = LocalDateTime.now().getMonthValue()-1;
+        int monthNumber = LocalDateTime.now().getMonthValue()-1; //     same idea as monthToDate except subtract one from the current month
         formatMonth = String.format("%d",monthNumber);
 
         for(Transaction t: transactions){
-            if(t.getDate().contains(formatMonth)){
+            if(t.getDate().contains(formatMonth)){//    if transaction date contains the previous month (current month - 1), display the following
                 System.out.printf("| %15s | %15s | %-30s | %15s | %15s |\n", t.getDate(),
                         t.getTime(),
                         t.getDescription(),
@@ -400,12 +431,17 @@ public class Accounts {
             }
         }
     }
+    /**
+     *      filterByMonth() is the first option of the third level menu,
+    *       where the user and enter a query and that query is then checked
+    *       then displayed if matched
+    * */
     public static void filterByMonth(){
         String query = Console.PromptForString("Enter a month you'd like to view transactions for: ");
         for(Transaction t: transactions){
-            String[] dateToConvert = t.getDate().split("-");
-            String monthToQuery = dateToConvert[1];
-            if(query.equalsIgnoreCase(monthToQuery)){
+            String[] dateToConvert = t.getDate().split("-");//      split transaction date into 3 parts: year, month, day then add to array
+            String monthToQuery = dateToConvert[1];//   grab the month which is the 2nd position, index 1 of the array
+            if(query.equalsIgnoreCase(monthToQuery)){ //    compare the query, if it matches, display the following
                 System.out.println("Transactions for " + query);
                 System.out.println("----------------------------------------------------------------------------------------------------------");
 
@@ -418,6 +454,9 @@ public class Accounts {
 
         }
     }
+    /**
+     *      yearToDate() is the equivalent of monthToDate() but returning all entries of the current year
+     * */
     public static void yearToDate(){
         System.out.println("Year To Date");
         System.out.println("----------------------------------------------------------------------------------------------------------");
@@ -434,6 +473,9 @@ public class Accounts {
                         t.getAmount());
         }
     }
+    /**
+     *      previousYear() is also the equivalent of previousMonth(), but for filtering out and displaying the previous year
+    * */
     public static void previousYear(){
         System.out.println("Previous Year");
         System.out.println("----------------------------------------------------------------------------------------------------------");
@@ -452,6 +494,10 @@ public class Accounts {
                         t.getAmount());
         }
     }
+    /**
+     *      searchByVendor() is a modified version of filterByMonth, difference being instead of filtering by month,
+     *      the vendor is used as a conditional query
+     * */
     public static void searchByVendor(){
         String query = Console.PromptForString("Enter the name of the vendor you wish you view history with:");
         System.out.println("Transactions History: " + query.toUpperCase());
@@ -467,7 +513,10 @@ public class Accounts {
             }
         }
     }
-
+    /**
+     *      A hardcoded Smiley face is used to transition to and from different level menus,
+     *      this was used to compensate for the fact I could not figure out how to clear the console
+     * */
     public static void printStarsToTransitionMenu(){
         System.out.println("\n");
         for(int i = 0; i < 2; i++)

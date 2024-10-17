@@ -12,22 +12,31 @@ import java.util.HashMap;
 import java.util.InputMismatchException;
 
 public class Main {
-   ;
-    static ArrayList<Accounts> accounts = new ArrayList<>();
+
+    /**
+     *      The main function creates an instance of the Account class and passes that instance to the user menu
+     * */
 
     public static void main(String[] args) {
-        /*Accounts test = new Accounts();
+        Accounts test = new Accounts();
         test = test.createAccount();
-        System.out.println(test.toString());*/
+        //System.out.println(test.toString());
         // accountScreen();
-        homeScreen();
+        homeScreen(test);
     }
 
-    public static void homeScreen(){
+    /**
+     *      The homeScreen function acts as the official entry to the program and prompts
+     *      the user with the first level menu, the account object is
+     *      passed to the function because, when a user is created, that user is then referenced
+     *      in the accounts class where an account is then created simultaneously with the user
+     * */
+
+    public static void homeScreen(Accounts account){
         do{
             try {
                 printStarsToTransitionMenu();
-                System.out.println("Welcome to Accounting Ledger Application!");
+                System.out.println("Welcome to Accounting Ledger Application, " + account.getUser().getFullName() + "!");
                 System.out.println("1) Add Deposit:");
                 System.out.println("2) Make Payment:");
                 System.out.println("3) Ledger:");
@@ -37,23 +46,30 @@ public class Main {
 
                 switch (homeScreenChoice) {
                     case 1:
-                        Accounts.addDeposit();
+                        account.addDeposit();
                         break;
                     case 2:
-                        Accounts.makePayment();
+                        account.makePayment();
                         break;
                     case 3:
-                        Accounts.ledger();
+                        account.ledger();
                         break;
                     case 4:
                         System.out.println("Exiting application...");
                         return;
+                    default:
+                        System.out.println("Please enter one of the available selections.");
                 }
             } catch (Exception e) {
-                System.out.println(e.getMessage() + " <----- Error. Please Try Again");
+                System.out.println(e.getMessage() + " <----- This is not allowed. Please Try Again");
             }
         }while(true);
     }
+
+    /**
+     *      printStarsToTransitionMenu() just prints a smiley face to transition menus,
+     *      in this instance it'll occur when the user first enters the program
+     * */
     public static void printStarsToTransitionMenu(){
         System.out.println("\n");
         for(int i = 0; i < 2; i++)
