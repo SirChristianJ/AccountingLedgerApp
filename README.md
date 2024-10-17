@@ -22,7 +22,7 @@
    
 
 ## 1. Opening menu should prompt a user with a menu consisting of 4 options:
-!("C:\Users\default.LAPTOP-1BRIRGAP\Pictures\capstonewalkthough1.jpg")
+!("capstonewalkthrough1.jpg")
 
 
 
