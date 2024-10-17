@@ -1,6 +1,15 @@
 # AccountingLedgerApp Overview
 **YearUp Java Development Capstone 1**
 **The primary functionalities required for this capstone were the following:**
+# Table of Contents
+
+1. [AccountingLedgerApp](#accountingledgerapp)
+2. [YearUp Java Development Capstone 1](#yearup-java-development-capstone-1)
+3. [Primary Functionalities](#primary-functionalities)
+   - [Opening Menu Options](#1-opening-menu-should-prompt-a-user-with-a-menu-consisting-of-4-options)
+   - [Ledger Viewing Options](#2-viewing-the-ledger-should-then-prompt-the-user-with-a-second-level-menu-consisting-of-the-following-options)
+   - [Report Viewing Options](#3-selecting-to-display-reports-then-prompts-the-user-with-a-third-level-menu)
+4.[The language and classes used](#ab
 
 ## 1. Opening menu should prompt a user with a menu consisting of 4 options:
 - Make a deposit
