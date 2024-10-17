@@ -22,10 +22,7 @@
    
 
 ## 1. Opening menu should prompt a user with a menu consisting of 4 options:
-- Make a deposit
-- Make a payment
-- View the ledger
-- Exit the program
+!("C:\Users\default.LAPTOP-1BRIRGAP\Pictures\capstonewalkthough1.jpg")
 
 
 
