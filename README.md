@@ -9,7 +9,8 @@
    - [Opening Menu Options](#1-opening-menu-should-prompt-a-user-with-a-menu-consisting-of-4-options)
    - [Ledger Viewing Options](#2-viewing-the-ledger-should-then-prompt-the-user-with-a-second-level-menu-consisting-of-the-following-options)
    - [Report Viewing Options](#3-selecting-to-display-reports-then-prompts-the-user-with-a-third-level-menu)
-4.[The language and classes used](#ab
+4. [The language and classes used](#about-the-project)
+   
 
 ## 1. Opening menu should prompt a user with a menu consisting of 4 options:
 - Make a deposit
@@ -32,13 +33,11 @@
  - Return to previous Menu
 
 # About The Project
-- Built with:
-- Java
-- 3 Classes were created:
+- Built with: Java , 3 Classes were created:
 1. Transaction class - This class would maintain all the basic information included with a transaction
 2. User class - This class was originally intended to pass user info into the Accounts class to simultaneously create an account once the user is created. But at the end I just opted for just using it in Accounts to pass the users name throughout the menus.
 3. Accounts class - This class was suppose to tie everything together referencing a user and an arraylist of transactions. I initially intended for the class to be able to create multiple accounts to add to the flexibility of the application but because my data for the transactions were from a single CSV file, I would hypothetically have to create a new individual CSV file for each new Account in order to track the data correctly. Realizing this approach would make more sense if using a database, I opted for using the accounts class to encapsulate all the methods that were originally in the main file to make the main file shorter.
-- Additional Console class which was used as utility for prompting user questions via Java's Scanner Class
+- Additional Console class which was used as utility for prompting user questions via Java's Scanner Class from previous exercises
 
 # Challenges/ What I learned
 As stated in the about section, my curiosity led me to attempt to add an extra layer of flexibility to the project by allowing the option to create multiple users but as I would proceed to get deep into implementing this approach I ran into some challenges:
